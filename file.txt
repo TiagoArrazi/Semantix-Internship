@@ -1,0 +1,6 @@
+{"user":"ALL","group":"WRITE","other":"EXECUTE"}
+{"user":"ALL","group":"WRITE_EXECUTE","other":"READ"}
+{"user":"ALL","group":"READ_EXECUTE","other":"READ_WRITE"}
+{"user":"READ","group":"READ_EXECUTE","other":"READ_WRITE"}
+{"user":"READ_WRITE","group":"READ_EXECUTE","other":"READ_WRITE"}
+{"user":"EXECUTE","group":"READ_EXECUTE","other":"READ_WRITE"}

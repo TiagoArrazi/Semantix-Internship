@@ -1,0 +1,34 @@
+REGEX OU EXPRESSÕES REGULARES
+
+São case sensitive
+linguagem de busca de padrões. Como se fosse um ctrl+f mais profundo e detalhado. Informamos o padrão do texto, o texto alvo e pedimos para a engine fazer a busca.
+?- quando um elemento pode ou não aparecer na expressão
+
+METACHARACTER - todo caractere que não possui valor semântico propriamente dito, ou seja, visualmente ele parece uma coisa, mas no fim ele tem um significado especial
+Ex: o ponto(.) tem o valor de qualquer caractere
+\ -> pega o valor literal do caractere
+\d -> pega caracteres alfanuméricos
+\s -> considera espaços em branco
+\w -> considera todas as letras, números e underline
+colocando-os em letra maiúscula, nega-se suas funções e eles realizam as opostas. Ex:\S passa a pegar texto, \W caracteres especiais
+
+Classe de caractere pega um conjunto específico de caracteres
+[] -> dentro coloca-se quais caracteres queremos considerar
+Ex: [0123], [0-3]
+
+Quantifiers uma forma de dizer ao regex quantas vezes você quer que aquele caracter apareça
+Ex: \d{5}
+{n,} -> aparece no mínimo 'n' vezes
+{n,m} -> mínimo e máximo
+* -> quando o caractere pode ou não aparecer, mas quando aparece, aparece várias vezes
++ -> aparece pelo menos uma vez
+
+Grupos de caracteres agrupam expressões
+Ex: ()
+(?:) -> não captura o grupo que está inserido
+Backreferences -> referencia um grupo que já foi informado anteriormente
+Ex: ([\w\s]+)(?:<\/\1>)
+
+Âncoras delimita um começo e um fim em uma expressão regular
+\b -> busca uma expressão que não começa e nem termina com letras
+Ex: \ba{3}\b

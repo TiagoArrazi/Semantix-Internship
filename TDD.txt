@@ -1,0 +1,19 @@
+1 + 1
+1+ 1
+1 +1
+1+1
+1 +
+0 + 1
+1/0
+factorial(10)
+c + 1
+factorial(a)
+fibonacci(10)
+fibonacci(b)
+
+2x2
+2x 2
+2 x2 
+2 x 2 x 2
+2x           2
+
