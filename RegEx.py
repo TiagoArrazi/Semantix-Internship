@@ -3,8 +3,6 @@ import sys #módulo para capturar parâmetros diretamente do terminal
 
 regex = re.compile('.+..:.(\w+).+:.(\w+).+.:.(\w+).+')
 
-matchString = ""
-
 with open(sys.argv[1]) as f:
 
     for line in f:
