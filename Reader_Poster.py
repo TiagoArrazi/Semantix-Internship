@@ -8,7 +8,7 @@ def dateParser(dateString): #conversor de formato de datas
 
 def permParser(permString): #conversor de nome de permissões de arquivos
 
-    permDict = {'rwx':'ALL',
+    permDict = {'rwx':'ALL', #é utilizado um dicionário para acessar as devidas strings correspondentes
             '-wx':'WRITE_EXECUTE',
             'r-x':'READ_EXECUTE',
             'rw-':'READ_WRITE',
