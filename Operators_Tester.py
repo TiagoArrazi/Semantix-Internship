@@ -1,11 +1,11 @@
-import unittest
+import unittest #módulo para realizar teste unitário de funções
 from Operators import *
 
 class Test_Operators(unittest.TestCase):
 
     def test_operate(self):
 
-        self.assertEqual(operate('1+1'), 2)
+        self.assertEqual(operate('1+1'), 2) # self.assertEqual() recebe 2 parâmetros, a função com os parâmetros de entrada e a saída esperada
         self.assertEqual(operate('1 +1'), 2)
         self.assertEqual(operate('1+ 1'), 2)
         self.assertEqual(operate('1 + 1'), 2)

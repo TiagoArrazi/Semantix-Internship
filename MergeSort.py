@@ -1,3 +1,6 @@
+import numpy as np
+import time
+
 def Merge(arr, b, m, e):
 
     n1 = m - b + 1 # 1st subarray size
@@ -57,11 +60,15 @@ def MergeSort(arr, b, e):
 
 def main():
 
-    arr = [12,34,2,1,3,4,2,2,22,65,1,4,44,2,4,4,213,2,34,22,3,14,343,24,24,7,3742,4,24,777,4234,2,4,414,99,5656,867,8,9]
+    start_time = time.time()
+
+    arr = np.random.randint(1,1000,10000)
 
     MergeSort(arr, 0, len(arr) - 1)
 
     print(arr)
 
+    print("--- %.5f segundos ---" % (time.time() - start_time))
+   
 main()
 

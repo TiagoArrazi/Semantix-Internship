@@ -1,5 +1,5 @@
-import sys
-import re
+import sys #módulo para realizar captura de parâmetros na linha de comando
+import re #módulo pra utilizar métodos de expressões regulares 
 
 #===================================================================================
 
@@ -31,39 +31,39 @@ def fibonacci(n):
 
 def operate(argString):
 
-    result = re.sub('x', '*', argString)
+    result = re.sub('x', '*', argString) #caso um dos elementos da string capturada seja 'x', o programa irá substituir por '*' para realizar 						  uma operação válida
 
     try:
 
         if argString == "":
       
-            return '------#Empty Space#------'
+            return '------#Empty Space#------' #retorna essa mensagem se a string estiver vazia
 
         else:
 
-            return eval(result)
+            return eval(result) #utilizando a função 'eval(str)', é possível realizar uma operação matemática a partir de uma string
 
     except ZeroDivisionError:
 
-        return 'Zero Division Error'
+        return 'Zero Division Error' #captura uma exceção em caso de divisão por 0
 
     except NameError:
 
-        return 'Name Error'
+        return 'Name Error' #captura uma exceção em caso de parâmetros inválidos
 
     except SyntaxError:
 
-        return 'Syntax Error'
+        return 'Syntax Error' #captura uma exceção em caso de síntaxe inválida
 
 #==========================================================================
 
 def main():
 
-    argString = ""
+    argString = "" #essa string receberá os parâmetros do programa
 
-    inputArgs = sys.argv[1:]
+    inputArgs = sys.argv[1:] #essa variável recebe diretamente uma slice da lista argv[]
 
     for arg in inputArgs:
-        argString += arg
+        argString += arg #argString recebe um elemento de inputArgs a cada iteração
 
-    operate(argString)
+    operate(argString) 

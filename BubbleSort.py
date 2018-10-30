@@ -1,3 +1,6 @@
+import numpy as np
+import time
+
 def BubbleSort(arr):
 
     for i in range(0,len(arr)-1):
@@ -15,9 +18,13 @@ def BubbleSort(arr):
 
 def main():
 
-    arr = [1,23,5,2,5,7,64,45,8,7,5,89,0,9,8,9,7,8,4,6,78,77,7,78,5]
+    start_time = time.time()
+
+    arr = np.random.randint(1,1000,10000)
     
     print(BubbleSort(arr))
+
+    print("--- %.5f segundos ---" % (time.time() - start_time))
 
 main()
 
