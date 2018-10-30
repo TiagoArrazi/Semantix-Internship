@@ -32,7 +32,7 @@ def main():
 
                 line  = line.split() #separa linha do arquivo por espaços em branco
 
-                if line[0][0] == '-': #apenas leituras de arquivos, não diretórios                
+                if line[0][0] == '-': #lê apenas arquivos, não diretórios                
 
                     wr.writerow([line[8], dateParser(line[5]), line[6][:8], line[4], permParser(line[0][1:4]),
                         permParser(line[0][4:7]), permParser(line[0][7:10])]) #escreve linha no CSV
