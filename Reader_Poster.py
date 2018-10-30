@@ -8,42 +8,16 @@ def dateParser(dateString): #conversor de formato de datas
 
 def permParser(permString): #conversor de nome de permissões de arquivos
 
-    if permString == 'rwx': 
+    permDict = {'rwx':'ALL',
+            '-wx':'WRITE_EXECUTE',
+            'r-x':'READ_EXECUTE',
+            'rw-':'READ_WRITE',
+            'r--':'READ',
+            '-w-':'WRITE',
+            '--x':'EXECUTE',
+            'rws': 'SUID'}
 
-        return 'ALL' #troca nome da permissão
-
-    elif permString == 'rws':
-
-        return 'SUID'
-
-    elif permString == '-wx':
-
-        return 'WRITE_EXECUTE'
-
-    elif permString == 'r-x':
-
-        return 'READ_EXECUTE'
-
-    elif permString == 'rw-':
-
-        return 'READ_WRITE'
-
-    elif permString == 'r--':
-
-        return 'READ'
-
-    elif permString == '-w-':
-
-        return 'WRITE'
-
-    elif permString == '--x':
-
-        return 'EXECUTE'
-
-    elif permString == '---':
-
-        return 'None'
-
+    return permDict[permString]
     
 def main():
 
