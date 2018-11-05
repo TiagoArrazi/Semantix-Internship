@@ -48,6 +48,8 @@ if __name__ == "__main__":
 
     with open("Exchange.csv", "w") as f:
 
+        count = 0
+
         XCH_writer = csv.writer(f, delimiter = ";")
         XCH_writer.writerow(["Moeda", "Cotacao", "Variacao", "Timestamp"])
 
@@ -57,8 +59,9 @@ if __name__ == "__main__":
             XCH_writer.writerow([scrapeCurrency(requestString.text), scrapeCotation(requestString.text), scrapeVariation(requestString.text), 
                                 scrapeTimestamp(requestString)])
 
-            print("New line inserted")
-            time.sleep(10)
+            count += 1
+            print(f"{count} line(s) inserted")
+            time.sleep(5)
 
 
 
