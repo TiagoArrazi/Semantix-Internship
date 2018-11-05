@@ -2,6 +2,7 @@ import requests as rq
 import datetime
 import csv
 import time
+import os
 
 myURL = "https://m.investing.com/currencies/usd-brl"
 
@@ -56,6 +57,7 @@ if __name__ == "__main__":
             XCH_writer.writerow([scrapeCurrency(requestString.text), scrapeCotation(requestString.text), scrapeVariation(requestString.text), 
                                 scrapeTimestamp(requestString)])
 
+            print("New line inserted")
             time.sleep(10)
 
 
