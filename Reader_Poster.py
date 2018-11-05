@@ -5,27 +5,55 @@ import re
 
 def kiloParser(byteString):
 
-    byteString.strip('K')
-    floatByteString = float(byteString)
+    newByteString = byteString.replace("K","")
+    floatByteString = float(newByteString)
 
-    floatByteString
+    floatByteString *= 1024
 
+    return floatByteString
+
+
+def megaParser(byteString):
+
+    newByteString = byteString.replace("M","")
+    floatByteString = float(newByteString)
+
+    floatByteString *= 1024**2
+    
+    return floatByteString
+
+
+def gigaParser(byteString):
+
+    floatByteString = byteString.replace("G","")
+    floatByteString = float(newByteString)
+
+    floatByteString *= 1024**3
+
+    return floatByteString
 
 
 def byteParser(byteString):
-
-    regex = re.compile('[KMG]')
-
+    
     byteString = re.sub(',' ,'.' , byteString)
 
-    byteDict = {'K' : kiloParser(byteString)
-                'M' : megaParser(byteString)
-                'G' : gigaParser(byteString)}
+    byteDict = {'K' : kiloParser,
+                'M' : megaParser,
+                'G' : gigaParser}
+
+    try:
     
-    byteDict[regex.match(byteString)]
+       newByteString = byteDict[byteString[-1]](byteString)
+       return newByteString
+
+    except KeyError:
+
+        return byteString
 
 
 def Reader_Poster(filename):
+
+    count = 0
 
     with open(filename) as f: #abre arquivo com o nome em argv[1]
 
@@ -43,6 +71,9 @@ def Reader_Poster(filename):
                     wr.writerow([line[8], dateParser(line[5]), line[6][:8], byteParser(line[4]), permParser(line[0][1:4]),
                         permParser(line[0][4:7]), permParser(line[0][7:10])]) #escreve linha no CSV
 
+                    count += 1
+
+            print(count)
 
         myCSV.close()
 
@@ -68,15 +99,13 @@ def permParser(permString): #conversor de nome de permissões de arquivos
 
     return permDict[permString]
     
-def main():
+if __name__ == "__main__":
 
-    Reader_Poster(sys.argv[1])
-
-    os.system('ls -l | grep ^- | wc -l sys/class/bin')
+    Reader_Poster(sys.argv[1]) 
 
 
 
-main()
+
 
 
 
