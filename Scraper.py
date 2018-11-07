@@ -36,6 +36,7 @@ def scrapeVariation(requestString):
 
     return f"{varString} ({percString})"
 
+
 def scrapeTimestamp(request):
 
     date = request.headers["Date"][:-4]
@@ -46,12 +47,14 @@ def scrapeTimestamp(request):
 
 if __name__ == "__main__":
 
-    with open("Exchange.csv", "w") as f:
+    with open("Exchange.csv", "a+") as f:
 
         count = 0
 
         XCH_writer = csv.writer(f, delimiter = ";")
-        XCH_writer.writerow(["Moeda", "Cotacao", "Variacao", "Timestamp"])
+
+        if not os.path.isfile("Exchange.csv"):
+            XCH_writer.writerow(["Moeda", "Cotacao", "Variacao", "Timestamp"])
 
         for i in range(0, 100):
 
@@ -64,7 +67,7 @@ if __name__ == "__main__":
             time.sleep(5)
 
 
-
+    f.close()
 
 
 
