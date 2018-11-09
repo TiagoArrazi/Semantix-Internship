@@ -75,7 +75,7 @@ matrix = np.zeros((total_words), dtype = float)
 
 #Parameters
 learning_rate = 0.01
-training_epochs = 10
+training_epochs = 20
 batch_size = 150
 display_step = 1
 
@@ -122,7 +122,7 @@ biases = {
 prediction = multilayer_perceptron(input_tensor, weights, biases)
 
 #Define loss and optimizer
-entropy_loss = tf.nn.softmax_cross_entropy_with_logits(logits = prediction, labels = output_tensor)
+entropy_loss = tf.nn.softmax_cross_entropy_with_logits_v2(logits = prediction, labels = output_tensor)
 
 loss = tf.reduce_mean(entropy_loss)
 optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(loss)
