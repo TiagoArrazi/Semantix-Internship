@@ -1,8 +1,11 @@
 from bs4 import BeautifulSoup
 import requests
 import Scraper
+import time
+import csv
+import os
 
-def beautifulCotationScraper(soup):
+def beautifulPriceScraper(soup):
 
     tag = soup.find("span", class_ = "pid-2103-last")
     return tag.get_text().strip()
@@ -25,16 +28,18 @@ if __name__ == "__main__":
 
     myURL = "https://m.investing.com/currencies/usd-brl"
 
-    requestString = requests.get(url = myURL, headers = {'User-Agent':'curl/7.52.1'})
-    soup = BeautifulSoup(requestString.text, "lxml")
+            try:
 
-    print(beautifulCotationScraper(soup))
-    print(beautifulCurrencyScraper(soup))
-    print(beautifulVariationScraper(soup))
-    print(Scraper.scrapeTimestamp(requestString))
+                requestString =  requests.get(url = myURL, headers = {'User-Agent':'curl/7.52.1'})
+                soup = BeautifulSoup(requestString.text, "lxml")
 
+                XCH_writer.writerow()
 
+            except ConnectionError: 
+
+                """Couldn't connect  :(
+                   Verify your internet connection and try again  ;)"""
     
 
-
+    f.close()
 
