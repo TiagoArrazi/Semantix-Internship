@@ -53,8 +53,6 @@ def byteParser(byteString):
 
 def Reader_Poster(filename):
 
-    count = 0
-
     with open(filename) as f: #abre arquivo com o nome em argv[1]
 
         with open('CSV_file.csv', 'w') as myCSV: #cria novo arquivo .csv
@@ -71,13 +69,11 @@ def Reader_Poster(filename):
                     wr.writerow([line[8], dateParser(line[5]), line[6][:8], byteParser(line[4]), permParser(line[0][1:4]),
                         permParser(line[0][4:7]), permParser(line[0][7:10])]) #escreve linha no CSV
 
-                    count += 1
-
-            print(count)
-
         myCSV.close()
 
     f.close()
+
+    os.system('ls -l /bin/| grep ^- | wc -l')
 
 
 def dateParser(dateString): #conversor de formato de datas
