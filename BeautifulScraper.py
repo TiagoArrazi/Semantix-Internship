@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from bs4 import BeautifulSoup
 import requests
 import Scraper
@@ -28,17 +30,17 @@ if __name__ == "__main__":
 
     myURL = "https://m.investing.com/currencies/usd-brl"
 
-            try:
+    try:
 
-                requestString =  requests.get(url = myURL, headers = {'User-Agent':'curl/7.52.1'})
-                soup = BeautifulSoup(requestString.text, "lxml")
+        requestString =  requests.get(url = myURL, headers = {'User-Agent':'curl/7.52.1'})
+        soup = BeautifulSoup(requestString.text, "lxml")
 
-                XCH_writer.writerow()
+        XCH_writer.writerow()
 
-            except ConnectionError: 
+    except ConnectionError: 
 
-                """Couldn't connect  :(
-                   Verify your internet connection and try again  ;)"""
+         """Couldn't connect  :(
+            Verify your internet connection and try again  ;)"""
     
 
     f.close()
