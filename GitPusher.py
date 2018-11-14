@@ -13,7 +13,7 @@ def getArgvSize(argv):
 
 if __name__ == "__main__":
 
-    for i in range(1, getArgvSize(sys.argv) + 1):
+    for i in range(1, getArgvSize(sys.argv)):
 
         try:
             os.system(f"git add {sys.argv[i]}")
