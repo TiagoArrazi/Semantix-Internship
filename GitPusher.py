@@ -18,7 +18,7 @@ if __name__ == "__main__":
         try:
             os.system(f"git add {sys.argv[i]}")
             os.system("git commit -m \"Commit through GitPusher\"")
-            os.system("git commit -u origin master")
+            os.system("git push -u origin master")
 
         except IndexError:
 
