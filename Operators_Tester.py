@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import unittest #módulo para realizar teste unitário de funções
 from Operators import *
 

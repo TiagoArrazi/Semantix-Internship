@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 #Para a geração dos arquivos basta executar este script utilizando 'python3 DataMassGenerator.py' e ele irá gerar 4 arquivos .csv contendo informações aleatoriamente geradas, no momento há uma geração pequena de linhas, para aumentar o número de linhas é necessário apenas mudar os valores i e j nos for() dentro da função main()
 
 #Ainda existem alguns bugs

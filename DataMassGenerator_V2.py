@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 #Para a geração dos arquivos com a massa de dados é necessário apenas executar este script através de 'python3 DataMassGenerator_V2.py'
 
 import csv
@@ -163,7 +165,7 @@ def gera_Data_Saida(data_entrada): #gerador de data de saída de acordo com a da
 if __name__ == "__main__":
 	delimitador = ';'
 
-	qt_pacientes = 100000
+	qt_pacientes = 10000000
 	qt_medicos = 50000
 	qt_cid = 200
 	qt_dados = 10000

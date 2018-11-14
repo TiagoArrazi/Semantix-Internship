@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import csv #módulo importado para uso de CSV
 import sys #módulo para captura de parâmetros na linha de comando
 import os #módulo para executar linhas de comando do Linux via Python

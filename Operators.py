@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sys #módulo para realizar captura de parâmetros na linha de comando
 import re #módulo pra utilizar métodos de expressões regulares 
 

@@ -1,9 +1,11 @@
-import sys
+#!/usr/bin/env python3
 
-filename = sys.argv[1]
+import sys #to get variables directly from command line
 
-with open(filename) as f:
+filename = sys.argv[1] #the file to be opened is specfied through the command line
 
-	for line in f:	
+with open(filename) as f: #opens file
 
-		print(line)
+	for line in f:	#iterates through lines in the file
+
+		print(line) #prints each line
