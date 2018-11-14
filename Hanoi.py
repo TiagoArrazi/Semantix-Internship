@@ -19,5 +19,5 @@ def hanoi(d, src, dest, aux):
 if __name__ == "__main__":
 
     hanoi(int(sys.argv[1]), "A", "C", "B") #plays the game with wished number of discs
-    steps = (2 ** int(sys.argv[1])) - 1
-    print(f"{steps} steps")
+    #steps = (2 ** int(sys.argv[1])) - 1
+    #print(f"{steps} steps")
