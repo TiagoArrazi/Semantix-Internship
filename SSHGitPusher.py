@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #Use it by -> ./GitPusher.py (file_1) (file_2) (file_3) (file_4) ...
-#Only works with SSH
+#Works with SSH and HTTP(requires username and password)
 
 import os
 import sys
