@@ -16,6 +16,7 @@ def scrapeCotation(requestString):
 
     return cotString
 
+#-----------------------------------------------------------
 
 def scrapeCurrency(requestString):
 
@@ -25,6 +26,7 @@ def scrapeCurrency(requestString):
 
     return currString
 
+#-----------------------------------------------------------
 
 def scrapeVariation(requestString):
 
@@ -38,6 +40,7 @@ def scrapeVariation(requestString):
 
     return f"{varString} ({percString})"
 
+#-----------------------------------------------------------
 
 def scrapeTimestamp(request):
 
@@ -58,7 +61,7 @@ if __name__ == "__main__":
         if not os.path.isfile("Exchange.csv"):
             XCH_writer.writerow(["Moeda", "Cotacao", "Variacao", "Timestamp"])
 
-        for i in range(0, 100):
+        for i in range(0, 20):
 
             requestString = rq.get(url = myURL, headers = {'User-Agent':'curl/7.52.1'})
             XCH_writer.writerow([scrapeCurrency(requestString.text), scrapeCotation(requestString.text), scrapeVariation(requestString.text), 
@@ -67,9 +70,13 @@ if __name__ == "__main__":
             count += 1
             print(f"{count} line(s) inserted")
             time.sleep(5)
-
-
+    
     f.close()
+
+
+
+
+
 
 
 
