@@ -35,4 +35,3 @@ driver.find_element_by_xpath("//*[@id='contenteditable-textarea']").send_keys("T
 sleep(3)
 
 driver.find_element_by_xpath("//*[@id='submit-button']").click()
-#driver.find_element_by_xpath("//*[@id='button']").click()
