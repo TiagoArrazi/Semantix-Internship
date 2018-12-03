@@ -1,44 +1,40 @@
 #!/usr/bin/env python3
 
-import requests as rq
-import datetime
-import csv
-import time
-import os
+from requests import get
+from datetime import datetime
+from csv import writer
+from os import stat
+from bs4 import BeautifulSoup
 
 myURL = "https://m.investing.com/currencies/usd-brl"
 
-def scrapeCotation(requestString):
+#-----------------------------------------------------------
 
-    indexInit = requestString.find("pid-2103-last") + 32
-    indexFinal = indexInit + 7
-    cotString = requestString[indexInit:indexFinal].strip()
+def scrapePrice(soup):
 
-    return cotString
+    tag = soup.find("span", class_ = "pid-2103-last")
+    return tag.get_text().strip()
 
 #-----------------------------------------------------------
 
-def scrapeCurrency(requestString):
+def scrapeCurrency(soup):
 
-    indexInit = requestString.find("instrumentH1inlineblock") + 30
-    indexFinal = indexInit + 31
-    currString = requestString[indexInit:indexFinal].strip()
-
-    return currString
+    tag = soup.find("h1", class_ = "instrumentH1inlineblock")
+    return tag.get_text().strip()
 
 #-----------------------------------------------------------
 
-def scrapeVariation(requestString):
+def scrapeVariation(soup):
 
-    indexInit = requestString.find("greenFont pid-2103-pc") + 44
-    indexFinal = indexInit + 7
-    varString = requestString[indexInit:indexFinal].strip()
+    tag = soup.find("i", class_ = "pid-2103-pc")
+    return tag.get_text().strip()
 
-    indexInit = requestString.find("parentheses greenFont pid-2103-pcp") + 56
-    indexFinal = indexInit + 7
-    percString = requestString[indexInit:indexFinal].strip()
+#-----------------------------------------------------------
 
-    return f"{varString} ({percString})"
+def scrapePercentual(soup):
+    
+    tag = soup.find("i", class_ = "pid-2103-pcp")
+    return tag.get_text().strip()
 
 #-----------------------------------------------------------
 
@@ -49,27 +45,21 @@ def scrapeTimestamp(request):
 
     return timestamp
 
+#-----------------------------------------------------------
 
 if __name__ == "__main__":
+    
+    requestString = get(url = myURL, headers = {'User-Agent':'curl/7.52.1'})
+    soup = BeautifulSoup(requestString.text, "html.parser")
 
-    with open("Exchange.csv", "a+") as f:
+    f = open("/home/ec2-user/Registros/Tiago/Dolar.csv", "a+")
 
-        count = 0
+    w = writer(f, delimiter = ";")
 
-        XCH_writer = csv.writer(f, delimiter = ";")
+    if stat("/home/ec2-user/Registros/Tiago/Dolar.csv").st_size == 0:
+        w.writerow(["Moeda", "Cotacao", "Variacao", "Timestamp"])
 
-        if not os.path.isfile("Exchange.csv"):
-            XCH_writer.writerow(["Moeda", "Cotacao", "Variacao", "Timestamp"])
-
-        for i in range(0, 20):
-
-            requestString = rq.get(url = myURL, headers = {'User-Agent':'curl/7.52.1'})
-            XCH_writer.writerow([scrapeCurrency(requestString.text), scrapeCotation(requestString.text), scrapeVariation(requestString.text), 
-                                scrapeTimestamp(requestString)])
-
-            count += 1
-            print(f"{count} line(s) inserted")
-            time.sleep(5)
+    w.writerow([scrapeCurrency(soup),scrapePrice(soup),scrapeVariation(soup),scrapePercentual(soup),scrapeTimestamp(requestString)])
     
     f.close()
 
