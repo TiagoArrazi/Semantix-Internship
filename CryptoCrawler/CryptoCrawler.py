@@ -17,13 +17,13 @@ f = open("Registro.csv", "a+")
 w = writer(f, delimiter = ";")
 
 if stat("Registro.csv").st_size == 0:
-    w.writerow(["#", "Nome", "Preco(USD)", "Var(24H)", "Var(7D)", "Simbolo", "Preco(BTC)", "Valor de Mercado", "Vol(24H)", "Vol Total"])
+    w.writerow(["#", "Nome", "Preco(USD)", "Var(24H)", "Var(7D)", "Simbolo", "Preco(BTC)", "Valor de Mercado", "Vol(24H)", "Vol Total", "Timestamp"])
 
 for c in content[1:]:
 
     l = c.get_text().replace('\t', '').split('\n')
     L = list(filter(None, l))
 
-    w.writerow([L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7],L[8],L[9]])
+    w.writerow([L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7],L[8],L[9], date])
 
 
