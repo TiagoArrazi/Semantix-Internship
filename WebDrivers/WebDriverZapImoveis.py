@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait,Select
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
@@ -18,7 +18,7 @@ chrome_options.add_argument("""--user-agent=Mozilla/5.0
                             Safari/537.36""")
 
 driver = webdriver.Chrome(chrome_options=chrome_options)
-print("Starting Chrome Headless")
+print("Starting Chrome Headless...")
 
 driver.get('https://www.zapimoveis.com.br/')
 
@@ -43,8 +43,25 @@ btn_search = WebDriverWait(driver,delay).until(
         )
 btn_search.click()
 
-sleep(1)
-print(driver.current_url)
+soup = BeautifulSoup(driver.page_source, "html.parser")
+
+article_list = driver.find_element_by_id("list")
+
+#article_list = WebDriverWait(driver,delay).until(
+#        EC.visibility_of_element_located(
+#            (By.XPATH, "//*[@id='list']")
+#            )
+#        )
+
+print(article_list.text)
+
+'''
+article_list = soup.find("div", {"id" : "list"})
+article = article_list.findChildren("article", recursive=False)
+
+for child in article:
+    print(child)
+'''
 
 
 
