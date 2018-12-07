@@ -1,69 +1,78 @@
 #! /usr/bin/env python3
 
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
-from time import sleep
+from requests import get 
+from collections import defaultdict
+from csv import writer
+from os import stat
 
-delay = 10
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("""--user-agent=Mozilla/5.0 
-                            (X11; Linux x86_64) 
-                            AppleWebKit/537.36 
-                            (KHTML, like Gecko) 
-                            Chrome/47.0.2526.80 
-                            Safari/537.36""")
+url = """https://www.zapimoveis.com.br/aluguel/imoveis/#{
+      \"pagina\":\"1\",
+      \"paginaOrigem\":\"Home\",
+      \"formato\":\"Lista\"}"""
 
-driver = webdriver.Chrome(chrome_options=chrome_options)
-print("Starting Chrome Headless...")
+requestString = get(url=url, headers={"User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36"})
 
-driver.get('https://www.zapimoveis.com.br/')
+soup = BeautifulSoup(requestString.text, "html.parser")
+realties = soup.find_all("article", {"class":"minificha"}) #list of HTML-shaped realties info
+updates = soup.find_all("em", {"class":"atualizacao"}) #list of HTML-shaped info updates
 
-btn_rent = WebDriverWait(driver,delay).until(
-        EC.visibility_of_element_located(
-            (By.XPATH, "//*[@id='btnLocacao']")
-            )
-        )
-btn_rent.click()
+for i in range(0,len(realties)):
 
-opt_selector = WebDriverWait(driver,delay).until(
-        EC.visibility_of_element_located(
-            (By.XPATH, "//*[@id='tipoImovelNovo']/optgroup[1]/option")
-            )
-        )
-opt_selector.click()
+    try:
+        realties[i] = eval(realties[i]['data-clickstream']) #turning 'data-clickstream' dictionary into an actual python dictionary
+    except NameError:
+        realties[i] = eval(realties[i]['data-clickstream']) #fix for an unknown bug 
+        print("Error")
 
-btn_search = WebDriverWait(driver,delay).until(
-        EC.visibility_of_element_located(
-            (By.XPATH, "//*[@id='btnBuscar']")
-            )
-        )
-btn_search.click()
+for i in range(0,len(updates)):
+    updates[i] = updates[i].get_text() #extracting text from updates
 
-soup = BeautifulSoup(driver.page_source, "html.parser")
+res_csv = open("Residencial.csv", "a+")
+com_csv = open("Comercial.csv", "a+")
+rur_csv = open("Rural", "a+")
 
-article_list = driver.find_element_by_id("list")
+res_w = writer(res_csv, delimiter=";")
+com_w = writer(com_csv, delimiter=";")
+rur_w = writer(rur_csv, delimiter=";")
 
-#article_list = WebDriverWait(driver,delay).until(
-#        EC.visibility_of_element_located(
-#            (By.XPATH, "//*[@id='list']")
-#            )
-#        )
+if stat("Residencial.csv").st_size == 0:
+    res_w.writerow(["ID","Subtipo","Area",
+                    "Quartos","Suites","Banheiros","Vagas",
+                    "Preco Aluguel","Preco Cond.","Preco IPTU",
+                    "Pais","Estado","Cidade","Bairro","Rua","Numero"])
 
-print(article_list.text)
+if stat("Comercial.csv").st_size == 0:
+    com_w.writerow(["ID","Subtipo","Area",
+                    "Quartos","Suites","Banheiros","Vagas",
+                    "Preco Aluguel","Preco Cond.","Preco IPTU",
+                    "Pais","Estado","Cidade","Bairro","Rua","Numero"])
+
+if stat("Rural.csv").st_size == 0:
+    rur_w.writerow(["ID","Subtipo","Area",
+                    "Quartos","Suites","Banheiros","Vagas",
+                    "Preco Aluguel","Preco Cond.","Preco IPTU",
+                    "Pais","Estado","Cidade","Bairro","Rua","Numero"])
+
+
+unitTypes_res = ["","","","","","","","","","",""]
+unitTypes_com = ["","","","","","","","","","","",""]
+unitTypes_rur = ["","",""]
 
 '''
-article_list = soup.find("div", {"id" : "list"})
-article = article_list.findChildren("article", recursive=False)
+if unitTypes == "Studio":
+    res_w.writerow()
+    com_w.writerow()
+    continue
 
-for child in article:
-    print(child)
+elif unitTypes in unitTypes_res:
+    res_w.writerow()
+
+elif unitTypes in unitTypes_com:
+    com_w.writerow()
+
+elif unitTypes in unitTypes_rur:
+    rur_w.writerow()
 '''
-
-
-
 
 
