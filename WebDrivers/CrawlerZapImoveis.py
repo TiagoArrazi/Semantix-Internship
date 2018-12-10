@@ -10,7 +10,7 @@ for i in range(1, 11):
 
     url = ("https://www.zapimoveis.com.br/" +
           "aluguel/imoveis/" + 
-          "#{%22pagina%22:%22" + str(i) + "%22,%22paginaOrigem%22:%22Home%22,%22formato%22:%22Galeria%22}")
+          "#{\"pagina\":\"" + str(i) + "\",\"paginaOrigem\":\"Home\",\"formato\":\"Galeria\"}")
 
     requestString = get(url=url, headers={"User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36"})
 
