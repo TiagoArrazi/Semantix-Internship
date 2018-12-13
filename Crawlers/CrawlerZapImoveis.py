@@ -1,13 +1,10 @@
 #! /usr/bin/env python3
 
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 
 from bs4 import BeautifulSoup
 from requests import get
+
 from csv import writer
 from os import stat
 from datetime import datetime
@@ -23,156 +20,168 @@ OPTIONS.add_argument("""--user-agent=Mozilla/5.0
 
 driver = webdriver.Chrome(chrome_options=OPTIONS)
 
-for i in range(1, 11):
+URL = """https://www.zapimoveis.com.br/aluguel/imoveis/#{%22pagina%22:%221%22}"""
 
-    URL = "https://www.zapimoveis.com.br/aluguel/imoveis/#{%22pagina%22:" 
-           + str(i) 
-           + ",%22paginaOrigem%22:%22Home%22,%22formato%22:%22Galeria%22}"
+HEADERS = {"User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36"}
+driver.get(URL)
+print(driver.current_url)
 
-    HEADERS = {"User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36"}
+while(1):
 
-    driver.get(URL)
     response = get(url=driver.current_url, headers=HEADERS).text
-
     soup = BeautifulSoup(response, "html.parser")
     realties = soup.find_all("article", {"class":"minificha"}) #list of HTML-shaped realties info
-    updates = soup.find_all("em", {"class":"atualizacao"}) #list of HTML-shaped info updates
+    print(len(realties))
 
-    for k in range(0,len(realties)):
+    if len(realties) == 0:
+        print("Quitting")
+        break
 
-        try:
+    else:
 
-            realties[k] = eval(realties[k]['data-clickstream']) #turning 'data-clickstream' dictionary into an actual python dictionary
-            key_list = list(realties[k].keys())
+        updates = soup.find_all("em", {"class":"atualizacao"}) #list of HTML-shaped info updates
 
-            for key in key_list:
+        for k in range(0,len(realties)):
 
-                if isinstance(realties[k][key], list):
-                    if len(realties[k][key]) == 0:
-                        realties[k][key] = '0'
+            try:
 
-        except NameError:
+                realties[k] = eval(realties[k]['data-clickstream']) #turning 'data-clickstream' dictionary into an actual python dictionary
+                key_list = list(realties[k].keys())
 
-            realties[k] = eval(realties[k]['data-clickstream']) #fix for an unknown bug 
-            key_list = list(realties[k].keys())
+                for key in key_list:
 
-            for key in key_list:
+                    if isinstance(realties[k][key], list):
+                        if len(realties[k][key]) == 0:
+                            realties[k][key] = '0'
 
-                if isinstance(realties[k][key], list):
-                    if len(realties[k][key]) == 0:
-                        realties[k][key] = '0'
+            except NameError:
+   
+                print("Error")
+                realties[k] = eval(realties[k]['data-clickstream']) #fix for an unknown bug 
+                key_list = list(realties[k].keys())
 
-    for l in range(0,len(updates)):
-        updates[l] = updates[l].get_text() #extracting text from updates
+                for key in key_list:
+    
+                    if isinstance(realties[k][key], list):
+                        if len(realties[k][key]) == 0:
+                            realties[k][key] = '0'
 
-    res_csv = open("Residencial.csv", "a+")
-    com_csv = open("Comercial.csv", "a+")
-    rur_csv = open("Rural.csv", "a+")
+        for l in range(0,len(updates)):
+            updates[l] = updates[l].get_text() #extracting text from updates
 
-    res_w = writer(res_csv, delimiter=";")
-    com_w = writer(com_csv, delimiter=";")
-    rur_w = writer(rur_csv, delimiter=";")
+        res_csv = open("Residencial.csv", "a+")
+        com_csv = open("Comercial.csv", "a+")
+        rur_csv = open("Rural.csv", "a+")
 
-    print(realties)
-    print(updates)
+        res_w = writer(res_csv, delimiter=";")
+        com_w = writer(com_csv, delimiter=";")
+        rur_w = writer(rur_csv, delimiter=";")
 
-    if stat("Residencial.csv").st_size == 0: #checks file size, creates header if empty(st_size==0)
-        res_w.writerow(["ID","Subtipo","Area",
-                        "Quartos","Suites","Banheiros","Vagas",
-                        "Preco Aluguel","Preco Cond.","Preco IPTU",
-                        "Pais","Estado","Cidade","Bairro","Rua","Numero"])
+        print(realties)
+        print(updates)
 
-    if stat("Comercial.csv").st_size == 0:
-        com_w.writerow(["ID","Subtipo","Area",
-                        "Quartos","Suites","Banheiros","Vagas",
-                        "Preco Aluguel","Preco Cond.","Preco IPTU",
-                        "Pais","Estado","Cidade","Bairro","Rua","Numero"])
+        if stat("Residencial.csv").st_size == 0: #checks file size, creates header if empty(st_size==0)
+            res_w.writerow(["ID","Subtipo","Area",
+                            "Quartos","Suites","Banheiros","Vagas",
+                            "Preco Aluguel","Preco Cond.","Preco IPTU",
+                            "Pais","Estado","Cidade","Bairro","Rua","Numero"])
 
-    if stat("Rural.csv").st_size == 0:
-        rur_w.writerow(["ID","Subtipo","Area",
-                        "Quartos","Suites","Banheiros","Vagas",
-                        "Preco Aluguel","Preco Cond.","Preco IPTU",
-                        "Pais","Estado","Cidade","Bairro","Rua","Numero"])
+        if stat("Comercial.csv").st_size == 0:
+            com_w.writerow(["ID","Subtipo","Area",
+                            "Quartos","Suites","Banheiros","Vagas",
+                            "Preco Aluguel","Preco Cond.","Preco IPTU",
+                            "Pais","Estado","Cidade","Bairro","Rua","Numero"])
 
-
-    unitTypes_res = ["Apartamento Padrão","Casa de Condomínio", #possible residential realties, according to the website
-                     "Casa de Vila","Casa Padrão","Cobertura",
-                     "Flat","Kitchenette/Conjugados","Loft",
-                     "Loteamento/Condomínio","Studio","Terreno Padrão"]
-
-    unitTypes_com = ["Box/Garagem","Casa Comercial", #possible business realties
-                     "Conjunto Comercial/Sala","Galpão/Depósito/Armazém",
-                     "Hotel","Indústria","Loja Shopping/ Ct Comercial",
-                     "Loja/Salão","Motel","Pousada/Chalé","Prédio Inteiro","Studio"]
-
-    unitTypes_rur = ["Chácara","Fazenda","Sítio"] #possible countryside realties
-
-    for j in range(0, len(realties)):
-
-        date = datetime.strptime((requestString.headers["Date"][:-4]), "%a, %d %b %Y %H:%M:%S")
-
-        if realties[j]['unitTypes'][0] == "Studio": #if the realty is a Studio, it will write in both Residential and Business files
-
-            res_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0], 
-                            realties[j]['areas'][0], realties[j]['bedrooms'][0], realties[j]['suites'][0], realties[j]['bathrooms'][0],
-                            realties[j]['parkingSpaces'][0], realties[j]['rentalPrices'], realties[j]['condoFee'], realties[j]['iptuPrices'], 
-                            realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2],
-                            realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
-                            date, updates[j]])
-
-            com_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0], 
-                            realties[j]['areas'], realties[j]['bedrooms'], realties[j]['suites'], realties[j]['bathrooms'], 
-                            realties[j]['parkingSpaces'], realties[j]['rentalPrices'], realties[j]['condoFee'], realties[j]['iptuPrices'], 
-                            realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2], 
-                            realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
-                            date, updates[j]])
-
-            res_csv.flush()
-            com_csv.flush()
-
-            continue
+        if stat("Rural.csv").st_size == 0:
+            rur_w.writerow(["ID","Subtipo","Area",
+                            "Quartos","Suites","Banheiros","Vagas",
+                            "Preco Aluguel","Preco Cond.","Preco IPTU",
+                            "Pais","Estado","Cidade","Bairro","Rua","Numero"])
 
 
-        elif realties[j]['unitTypes'][0] in unitTypes_res: #if the realty type is in the residential realties list, 
-                                         #redirects the writerow() to the Residential file
-            res_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0], 
-                            realties[j]['areas'], realties[j]['bedrooms'], realties[j]['suites'], realties[j]['bathrooms'], 
-                            realties[j]['parkingSpaces'], realties[j]['rentalPrices'], realties[j]['condoFee'], realties[j]['iptuPrices'], 
-                            realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2], 
-                            realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
-                            date, updates[j]])
+        unitTypes_res = ["Apartamento Padrão","Casa de Condomínio", #possible residential realties, according to the website
+                         "Casa de Vila","Casa Padrão","Cobertura",
+                         "Flat","Kitchenette/Conjugados","Loft",
+                         "Loteamento/Condomínio","Studio","Terreno Padrão"]
 
-            res_csv.flush()
+        unitTypes_com = ["Box/Garagem","Casa Comercial", #possible business realties
+                         "Conjunto Comercial/Sala","Galpão/Depósito/Armazém",
+                         "Hotel","Indústria","Loja Shopping/ Ct Comercial",
+                         "Loja/Salão","Motel","Pousada/Chalé","Prédio Inteiro","Studio"]
+
+        unitTypes_rur = ["Chácara","Fazenda","Sítio"] #possible countryside realties
+
+        for j in range(0, len(realties)):
+
+            date = datetime.strptime((requestString.headers["Date"][:-4]), "%a, %d %b %Y %H:%M:%S")
+
+            if realties[j]['unitTypes'][0] == "Studio": #if the realty is a Studio, it will write in both Residential and Business files
+
+                res_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0], 
+                                realties[j]['areas'][0], realties[j]['bedrooms'][0], realties[j]['suites'][0], realties[j]['bathrooms'],
+                                realties[j]['parkingSpaces'][0], realties[j]['rentalPrices'][0], 
+                                realties[j]['condoFee'], realties[j]['iptuPrices'], 
+                                realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2],
+                                realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
+                                date, updates[j]])
+
+                com_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0], 
+                                realties[j]['areas'][0], realties[j]['bedrooms'][0], realties[j]['suites'][0], realties[j]['bathrooms'], 
+                                realties[j]['parkingSpaces'][0], realties[j]['rentalPrices'][0],
+                                realties[j]['condoFee'], realties[j]['iptuPrices'], 
+                                realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2], 
+                                realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
+                                date, updates[j]])
+
+                res_csv.flush() 
+                com_csv.flush()
+
+                continue
 
 
-        elif realties[j]['unitTypes'][0] in unitTypes_com: #if the realty type is in the business realties list, 
-                                         #redirects the writerow() to the Business file
-            com_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'], 
-                            realties[j]['areas'], realties[j]['bedrooms'], realties[j]['suites'], realties[j]['bathrooms'], 
-                            realties[j]['parkingSpaces'], realties[j]['rentalPrices'], realties[j]['condoFee'], realties[j]['iptuPrices'], 
-                            realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2], 
-                            realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
-                            date, updates[i]])
+            elif realties[j]['unitTypes'][0] in unitTypes_res: #if the realty type is in the residential realties list, 
+                                                               #redirects the writerow() to 'Residencial.csv'
+                res_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0],
+                                realties[j]['areas'][0], realties[j]['bedrooms'][0], realties[j]['suites'][0], realties[j]['bathrooms'],
+                                realties[j]['parkingSpaces'][0], realties[j]['rentalPrices'][0], 
+                                realties[j]['condoFee'], realties[j]['iptuPrices'],
+                                realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2],
+                                realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
+                                date, updates[j]])
 
-            com_csv.flush()
+                res_csv.flush()
 
 
-        elif realties[j]['unitTypes'][0] in unitTypes_rur: #if the realty type is in the countryside realties list,
-                                         #redirects the writerow() to the Countryside file
-            rur_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'], 
-                            realties[j]['areas'], realties[j]['bedrooms'], realties[j]['suites'], realties[j]['bathrooms'], 
-                            realties[j]['parkingSpaces'], realties[j]['rentalPrices'], realties[j]['condoFee'], realties[j]['iptuPrices'], 
-                            realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2], 
-                            realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
-                            date, updates[j]])
+            elif realties[j]['unitTypes'][0] in unitTypes_com: #if the realty type is in the business realties list, 
+                                                               #redirects the writerow() to 'Comercial.csv'
+                com_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0],
+                                realties[j]['areas'][0], realties[j]['bedrooms'][0], realties[j]['suites'][0], realties[j]['bathrooms'],
+                                realties[j]['parkingSpaces'][0], realties[j]['rentalPrices'][0], 
+                                realties[j]['condoFee'], realties[j]['iptuPrices'],
+                                realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2],
+                                realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
+                                date, updates[j]])
 
-            rur_csv.flush()
+                com_csv.flush()
+
+
+            elif realties[j]['unitTypes'][0] in unitTypes_rur: #if the realty type is in the countryside realties list,
+                                                               #redirects the writerow() to 'Rural.csv'
+                rur_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0],
+                                realties[j]['areas'][0], realties[j]['bedrooms'][0], realties[j]['suites'][0], realties[j]['bathrooms'],
+                                realties[j]['parkingSpaces'][0], realties[j]['rentalPrices'][0], 
+                                realties[j]['condoFee'], realties[j]['iptuPrices'],
+                                realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2],
+                                realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
+                                date, updates[j]])
+
+                rur_csv.flush()
             
-    res_csv.close()
-    com_csv.close()
-    rur_csv.close()
+        res_csv.close()
+        com_csv.close()
+        rur_csv.close()
 
-    driver.execute_script("document.getElementById('proximaPagina').click()")
+        driver.execute_script("document.getElementById('proximaPagina').click()")
 
 
 
