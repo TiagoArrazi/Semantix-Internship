@@ -8,6 +8,7 @@ from requests import get
 from csv import writer
 from os import stat
 from datetime import datetime
+from time import sleep
 
 OPTIONS = webdriver.ChromeOptions()
 OPTIONS.add_argument("--headless")
@@ -18,23 +19,21 @@ OPTIONS.add_argument("""--user-agent=Mozilla/5.0
                                      Chrome/47.0.2526.80 
                                      Safari/537.36""")
 
+null = None
 driver = webdriver.Chrome(chrome_options=OPTIONS)
-
 URL = """https://www.zapimoveis.com.br/aluguel/imoveis/#{%22pagina%22:%221%22}"""
-
 HEADERS = {"User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36"}
 driver.get(URL)
-print(driver.current_url)
 
 while(1):
 
-    response = get(url=driver.current_url, headers=HEADERS).text
-    soup = BeautifulSoup(response, "html.parser")
+    print(driver.current_url)
+    response = get(url=driver.current_url, headers=HEADERS)
+    soup = BeautifulSoup(response.text, "html.parser")
     realties = soup.find_all("article", {"class":"minificha"}) #list of HTML-shaped realties info
-    print(len(realties))
 
     if len(realties) == 0:
-        print("Quitting")
+        print("Done!")
         break
 
     else:
@@ -66,6 +65,8 @@ while(1):
                         if len(realties[k][key]) == 0:
                             realties[k][key] = '0'
 
+            print(realties[k]['listingId'])
+        print('--------')
         for l in range(0,len(updates)):
             updates[l] = updates[l].get_text() #extracting text from updates
 
@@ -76,9 +77,6 @@ while(1):
         res_w = writer(res_csv, delimiter=";")
         com_w = writer(com_csv, delimiter=";")
         rur_w = writer(rur_csv, delimiter=";")
-
-        print(realties)
-        print(updates)
 
         if stat("Residencial.csv").st_size == 0: #checks file size, creates header if empty(st_size==0)
             res_w.writerow(["ID","Subtipo","Area",
@@ -113,14 +111,14 @@ while(1):
 
         for j in range(0, len(realties)):
 
-            date = datetime.strptime((requestString.headers["Date"][:-4]), "%a, %d %b %Y %H:%M:%S")
+            date = datetime.strptime((response.headers["Date"][:-4]), "%a, %d %b %Y %H:%M:%S")
 
             if realties[j]['unitTypes'][0] == "Studio": #if the realty is a Studio, it will write in both Residential and Business files
 
                 res_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0], 
                                 realties[j]['areas'][0], realties[j]['bedrooms'][0], realties[j]['suites'][0], realties[j]['bathrooms'],
                                 realties[j]['parkingSpaces'][0], realties[j]['rentalPrices'][0], 
-                                realties[j]['condoFee'], realties[j]['iptuPrices'], 
+                                realties[j]['condoFee'], realties[j]['iptuPrices'][0], 
                                 realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2],
                                 realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
                                 date, updates[j]])
@@ -128,7 +126,7 @@ while(1):
                 com_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0], 
                                 realties[j]['areas'][0], realties[j]['bedrooms'][0], realties[j]['suites'][0], realties[j]['bathrooms'], 
                                 realties[j]['parkingSpaces'][0], realties[j]['rentalPrices'][0],
-                                realties[j]['condoFee'], realties[j]['iptuPrices'], 
+                                realties[j]['condoFee'], realties[j]['iptuPrices'][0], 
                                 realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2], 
                                 realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
                                 date, updates[j]])
@@ -144,7 +142,7 @@ while(1):
                 res_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0],
                                 realties[j]['areas'][0], realties[j]['bedrooms'][0], realties[j]['suites'][0], realties[j]['bathrooms'],
                                 realties[j]['parkingSpaces'][0], realties[j]['rentalPrices'][0], 
-                                realties[j]['condoFee'], realties[j]['iptuPrices'],
+                                realties[j]['condoFee'], realties[j]['iptuPrices'][0],
                                 realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2],
                                 realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
                                 date, updates[j]])
@@ -157,7 +155,7 @@ while(1):
                 com_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0],
                                 realties[j]['areas'][0], realties[j]['bedrooms'][0], realties[j]['suites'][0], realties[j]['bathrooms'],
                                 realties[j]['parkingSpaces'][0], realties[j]['rentalPrices'][0], 
-                                realties[j]['condoFee'], realties[j]['iptuPrices'],
+                                realties[j]['condoFee'], realties[j]['iptuPrices'][0],
                                 realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2],
                                 realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
                                 date, updates[j]])
@@ -170,7 +168,7 @@ while(1):
                 rur_w.writerow([realties[j]['listingId'], realties[j]['unitTypes'][0],
                                 realties[j]['areas'][0], realties[j]['bedrooms'][0], realties[j]['suites'][0], realties[j]['bathrooms'],
                                 realties[j]['parkingSpaces'][0], realties[j]['rentalPrices'][0], 
-                                realties[j]['condoFee'], realties[j]['iptuPrices'],
+                                realties[j]['condoFee'], realties[j]['iptuPrices'][0],
                                 realties[j]['address'][0],realties[j]['address'][1], realties[j]['address'][2],
                                 realties[j]['address'][3], realties[j]['address'][4], realties[j]['address'][5],
                                 date, updates[j]])
@@ -182,6 +180,4 @@ while(1):
         rur_csv.close()
 
         driver.execute_script("document.getElementById('proximaPagina').click()")
-
-
-
+        sleep(5)
