@@ -1,0 +1,6 @@
+*.txt
+*.csv
+*.swp
+*.pyc
+*.swo
+/__pycache__
