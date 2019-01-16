@@ -18,15 +18,18 @@ Attribute Info:
 
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split 
-from numpy import array, genfromtxt, mean
+from numpy import array, genfromtxt
 
 inputs = genfromtxt('balance_scale_dataset.txt', delimiter=',', usecols=(1,2,3,4))
 outputs = genfromtxt('balance_scale_dataset.txt', delimiter=',', usecols=(0))
-training_inputs, testing_inputs, training_outputs, testing_outputs = train_test_split(inputs, outputs, test_size=0.3, random_state=42)
+training_inputs, testing_inputs, training_outputs, testing_outputs = train_test_split(
+                                                                     inputs, 
+                                                                     outputs, 
+                                                                     test_size=0.3, 
+                                                                     random_state=42)
 
 knn = KNeighborsClassifier(n_neighbors=17, p=2) # p=2 means Euclidean Distance(default)
 knn.fit(training_inputs, training_outputs)
 labels = knn.predict(testing_inputs)
-print(knn.score(testing_inputs, testing_outputs))
-print(labels)
+print(f'Accuracy: {(knn.score(testing_inputs, testing_outputs) * 100):.2f}%')
 
