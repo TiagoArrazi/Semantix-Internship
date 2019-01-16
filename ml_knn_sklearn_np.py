@@ -32,4 +32,5 @@ knn = KNeighborsClassifier(n_neighbors=17, p=2) # p=2 means Euclidean Distance(d
 knn.fit(training_inputs, training_outputs)
 labels = knn.predict(testing_inputs)
 print(f'Accuracy: {(knn.score(testing_inputs, testing_outputs) * 100):.2f}%')
-
+print(f'Training Inputs: {len(training_inputs)} {((len(training_inputs) / ((len(training_inputs) + len(testing_inputs)))) * 100):.2f}% of the dataset')
+print(f'Testing Inputs: {len(testing_inputs)} {((len(testing_inputs) / ((len(training_inputs) + len(testing_inputs)))) * 100):.2f}% of the dataset')
