@@ -27,4 +27,4 @@ for i in range(limit, len(inputs)):
 print(f'Training: {limit}')
 print(f'Tests: {len(inputs) - limit}')
 print(f'Correct answers: {correct}')
-print(f'Correct answers rate: {((100 * correct) / (len(inputs) - limit)):.2f}%')
+print(f'Accuracy: {((100 * correct) / (len(inputs) - limit)):.2f}%')
