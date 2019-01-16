@@ -25,4 +25,4 @@ for i in range(len(output)):
     if testing_outputs[i][0] == output[i]:
         correct_answers += 1
 
-print(correct_answers / len(output))
+print(f'Accuracy: {((correct_answers / len(output)) * 100):.2f}%')
