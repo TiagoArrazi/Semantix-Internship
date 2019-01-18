@@ -25,18 +25,18 @@ class Perceptron:
 
         while True:
             error = False # error does not exist initially
-            
+
             for i in range(self.n_samples):
                 u = 0
                 for j in range(self.n_attrbs + 1):
                     u += self.weights[j] * self.samples[i][j]
-                y = self.binary_step(u)
-                
+                y = self.signal(u)
+
                 if y != self.outputs[i]:
                     aux_error = self.outputs[i] - y
 
-                for j in range(self.n_attrbs + 1):
-                    self.weights[j] = self.weights[j] + self.learning_rate * aux_error * self.samples[i][j]
+                    for j in range(self.n_attrbs + 1):
+                        self.weights[j] = self.weights[j] + self.learning_rate * aux_error * self.samples[i][j]
 
                 error = True # error still exists
 
@@ -50,33 +50,40 @@ class Perceptron:
         u = 0
         for i in range(self.n_attrbs + 1):
             u += self.weights[i] * sample[i]
-        y = self.binary_step(u)
-        print(f'{sample[1:]} -> {y}')    
-
-    def binary_step(self, u):
-        if u >= 0:
-            return 1
-        return 0
+        y = self.signal(u)
+        print(f'{sample[1:]} -> {y}')
 
     def signal(self, u):
         if u >= 0:
             return 1
         return -1
 
-# OR
-samples_inputs = [[0, 0], [0, 1], [1, 0], [1, 1]]
-samples_outputs = [0, 1, 1, 1]
+
+samples_inputs = [[0.72, 0.82], [0.91, -0.69],
+	          [0.46, 0.80],   [0.03, 0.93],
+	          [0.12, 0.25],   [0.96, 0.47],
+	          [0.8, -0.75],   [0.46, 0.98],
+	          [0.66, 0.24],   [0.72, -0.15],
+                  [0.35, 0.01],   [-0.16, 0.84],
+  	          [-0.04, 0.68],  [-0.11, 0.1],
+	          [0.31, -0.96],   [0.0, -0.26],
+	          [-0.43, -0.65],  [0.57, -0.97],
+	          [-0.47, -0.03],  [-0.72, -0.64],
+	          [-0.57, 0.15],   [-0.25, -0.43],
+	          [0.47, -0.88],   [-0.12, -0.9],
+	          [-0.58, 0.62],   [-0.48, 0.05],
+	          [-0.79, -0.92],  [-0.42, -0.09],
+	          [-0.76, 0.65],   [-0.77, -0.76]]
+
+samples_outputs = [-1, -1, -1, -1, -1, -1, -1, -1,
+	           -1, -1, -1, -1, -1, 1, 1, 1, 1,
+	            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
 network = Perceptron(samples_inputs, samples_outputs)
 network.fit()
 
-# network.test([0, 0])
-# network.test([0, 1])
-# network.test([1, 0])
-# network.test([1, 1])
-
-
-# another example
-samples_inputs = [[0.1, 0.4, 0.7], [0.3, 0.7, 0.2],
-                  [0.6, 0.9, 0.8], [0.5, 0.7, 0.1]]
-samples_outputs = [1, -1, -1, 1]
-
+network.test([0.72, 0.82])
+network.test([-0.77, -0.76])
+# Unkown situations
+network.test([0.54, -0.43])
+network.test([0.0, 0.0])
