@@ -1,6 +1,3 @@
-from inspect import getmembers
-
-
 attributes = {'__FooBar__': ['foo', 'bar'],
               '__Sigma__': ['alpha', 'beta', 'gamma']}
 
