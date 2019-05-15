@@ -7,8 +7,6 @@ class Jsonifier:
     def jsonify_obj(cls, obj, _repr):
 
         serialized = {}
-        # global attributes
-
         for attr in dir(obj):
             if attr in attributes[_repr]:
                 serialized[attr] = getattr(obj, attr)
