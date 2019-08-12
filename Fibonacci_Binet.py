@@ -1,17 +1,15 @@
 from math import sqrt, floor
+from sys import argv
 
 def Fibonacci(n):
 
     return int(floor(((1+sqrt(5))**n-(1-sqrt(5))**n)/(2**n*sqrt(5))+0.5))
 
 
-print(Fibonacci(10))
-print(Fibonacci(200))
-
 try:
 
-    print(Fibonacci(2000))
+    print(Fibonacci(int(argv[1])))
 
-except OverflowError:
+except OverflowError as e:
 
-    print("Overflow")
+    print(e)

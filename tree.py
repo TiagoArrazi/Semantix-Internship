@@ -1,4 +1,4 @@
-import xml.etree.ElementTree as ET
+import lxml.etree
 
 xml_string = '''<?xml version="1.0"?>
 <data>
@@ -25,15 +25,5 @@ xml_string = '''<?xml version="1.0"?>
 </data>
 '''
 
-tree = ET.fromstring(xml_string)
-countries = tree.iter('country')
-for country in countries:
-    for rank in country.iter('rank'):
-        country.remove(rank)
-
-print(xml_string)
-
-new_xml = ET.tostring(tree, encoding='utf8', method='xml').split(b'\n')
-for line in new_xml:
-    print(line)
-
+tree = lxml.etree.fromstring(xml_string)
+results = tree.findall

@@ -13,17 +13,18 @@ soup = BeautifulSoup(requestString.text, "lxml")
 content = soup.findAll('tr')
 date = datetime.strptime(requestString.headers['Date'][:-4], '%a, %d %b %Y %H:%M:%S')
 
-f = open("Registro.csv", "a+")
-w = writer(f, delimiter = ";")
+with open("Registro.csv", "a+") as f:
 
-if stat("Registro.csv").st_size == 0:
-    w.writerow(["#", "Nome", "Preco(USD)", "Var(24H)", "Var(7D)", "Simbolo", "Preco(BTC)", "Valor de Mercado", "Vol(24H)", "Vol Total", "Timestamp"])
+        w = writer(f, delimiter = ";")
 
-for c in content[1:]:
+        if stat("Registro.csv").st_size == 0:
+            w.writerow(['code', 'name', 'priceUSD', 'change24H', 'change7D', 'symbol', 'priceBTC', 'marketCap', 'volume24H', 'totalVolume', 'timestamp'])
 
-    l = c.get_text().replace('\t', '').split('\n')
-    L = list(filter(None, l))
+        for c in content[1:]:
 
-    w.writerow([L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7],L[8],L[9], date])
+            l = c.get_text().replace('\t', '').split('\n')
+            L = list(filter(None, l))
+
+            w.writerow([L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7],L[8],L[9], date])
 
 

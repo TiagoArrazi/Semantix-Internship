@@ -21,7 +21,7 @@ xchURL = f"https://m.investing.com/currencies/{currCombination}"
 try:
 
     requestString = get(url = xchURL, headers = {'User-Agent':'curl/7.52.1'})
-    soup = BeautifulSoup(requestString.text, "lxml")
+    soup = BeautifulSoup(requestString.text, "html.parser")
 
 except (ReadTimeout, ConnectTimeout, HTTPError, Timeout, ConnectionError):
 
@@ -30,7 +30,7 @@ except (ReadTimeout, ConnectTimeout, HTTPError, Timeout, ConnectionError):
 
 if len(sys.argv) == 4:
 
-    if sys.argv[3] == "file":
+    if sys.argv[3] == "file"l
 
        makeFile(xchURL, currCombination, soup)
 
@@ -42,7 +42,7 @@ if len(sys.argv) == 4:
         for i in range(0,int(sys.argv[3])):
 
             requestString = get(url = xchURL, headers = {'User-Agent':'curl/7.52.1'})
-            soup = BeautifulSoup(requestString.text, "lxml")
+            soup = BeautifulSoup(requestString.text, "html.parser")
 
             print(beautifulCurrencyScraper(soup))
             print(beautifulPriceScraper(soup, currCombination))
