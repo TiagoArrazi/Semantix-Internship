@@ -19,8 +19,8 @@ if __name__ == '__main__':
 
     start = time()
 
-    intervals = [int(each) for each in list(linspace(0, 1800000000, 4))]
-    range_list = mk_ranges(interval_list=intervals, amount=3)
+    intervals = [int(each) for each in list(linspace(0, 1800000000, 5))]
+    range_list = mk_ranges(interval_list=intervals, amount=4)
 
     with ProcessPoolExecutor() as executor:
         futures = list()
