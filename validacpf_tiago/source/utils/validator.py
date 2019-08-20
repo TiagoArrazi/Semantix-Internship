@@ -1,12 +1,9 @@
-from source.utils.formatter import Formatter
-
-
 class Validator:
 
     @classmethod
     def validate(cls, input_string):
         first_digit_weight_dict = dict()
-        formatted_string = Formatter.format_it(input_string)
+        formatted_string = cls.format_(input_string)
 
         if len(set(list(formatted_string))) == 1:
             return False
@@ -39,3 +36,8 @@ class Validator:
             return False
 
         return True
+
+    @classmethod
+    def format_(cls, input_string):
+        return ''.join([each for each in input_string if each not in ['.', '-']])
+
