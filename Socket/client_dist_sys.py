@@ -1,86 +1,43 @@
-# Original code -->
-# https://pythonprogramming.net/client-chatroom-sockets-tutorial-python-3/?completed=/server-chatroom-sockets-tutorial-python-3/
 import socket
-import sys
-import errno
+from concurrent.futures import ProcessPoolExecutor
+from time import time
+from numpy import linspace
 
-HEADER_LENGTH = 10
+addrs = dict(addr_1={"ip": "127.0.0.1",
+                     "port": 13000},
+             addr_2={"ip": "127.0.0.1",
+                     "port": 13001}
+             )
 
-IP = "192.168.0.10"
-PORT = 1234
-my_username = input("Username: ")
 
-# Create a socket socket.AF_INET - address family, IPv4, some otehr possible are AF_INET6, AF_BLUETOOTH,
-# AF_UNIX socket.SOCK_STREAM - TCP, conection-based, socket.SOCK_DGRAM - UDP, connectionless, datagrams,
-# socket.SOCK_RAW - raw IP packets
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+def send_params(ranges, sock):
+    sock.send(ranges.encode("utf-8"))
 
-# Connect to a given ip and port
-client_socket.connect((IP, PORT))
 
-# Set connection to non-blocking state, so .recv() call won;t block, just return some exception we'll handle
-client_socket.setblocking(False)
+def mk_ranges(interval_list, amount):
+    return [range(interval_list[i], interval_list[i + 1]) for i in range(amount)]
 
-# Prepare username and header and send them We need to encode username to bytes, then count number of bytes and
-# prepare header of fixed size, that we encode to bytes as well
-username = my_username.encode('utf-8')
-username_header = f"{len(username):<{HEADER_LENGTH}}".encode('utf-8')
-client_socket.send(username_header + username)
 
-while True:
+if __name__ == '__main__':
+    start = time()
 
-    # Wait for user to input a message
-    message = input(f'{my_username} > ')
+    intervals = [int(each) for each in list(linspace(0, 1800000000, 3))]
+    range_list = mk_ranges(interval_list=intervals, amount=2)
+    processed_range_list = ["{} {}".format(r[0], r[-1]) for r in range_list]
 
-    # If message is not empty - send it
-    if message:
+    client_sock_1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_sock_2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        # Encode message to bytes, prepare header and convert to bytes, like for username above, then send
-        message = message.encode('utf-8')
-        message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
-        client_socket.send(message_header + message)
+    client_sock_1.connect((addrs["addr_1"]["ip"], addrs["addr_1"]["port"]))
+    client_sock_2.connect((addrs["addr_2"]["ip"], addrs["addr_2"]["port"]))
 
-    try:
-        # Now we want to loop over received messages (there might be more than one) and print them
-        while True:
+    sock_list = [client_sock_1, client_sock_2]
 
-            # Receive our "header" containing username length, it's size is defined and constant
-            username_header = client_socket.recv(HEADER_LENGTH)
+    with ProcessPoolExecutor as executor:
+        futures = list()
+        for r in executor.map(send_params, (processed_range_list, sock_list)):
+            futures.append(r)
 
-            # If we received no data, server gracefully closed a connection, for example using socket.close() or
-            # socket.shutdown(socket.SHUT_RDWR)
-            if not len(username_header):
-                print('Connection closed by the server')
-                sys.exit()
+        print("RESULT: {}".format(sum(futures)))
+        print("TIME: {}".format(time() - start))
 
-            # Convert header to int value
-            username_length = int(username_header.decode('utf-8').strip())
-
-            # Receive and decode username
-            username = client_socket.recv(username_length).decode('utf-8')
-
-            # Now do the same for message (as we received username, we received whole message, there's no need to
-            # check if it has any length)
-            message_header = client_socket.recv(HEADER_LENGTH)
-            message_length = int(message_header.decode('utf-8').strip())
-            message = client_socket.recv(message_length).decode('utf-8')
-
-            # Print message
-            print(f'{username} > {message}')
-
-    except IOError as e:
-        # This is normal on non blocking connections - when there are no incoming data error is going to be raised
-        # Some operating systems will indicate that using AGAIN, and some using WOULDBLOCK error code
-        # We are going to check for both - if one of them - that's expected, means no incoming data, continue as normal
-        # If we got different error code - something happened
-        if e.errno != errno.EAGAIN and e.errno != errno.EWOULDBLOCK:
-            print('Reading error: {}'.format(str(e)))
-            sys.exit()
-
-        # We just did not receive anything
-        continue
-
-    except Exception as e:
-        # Any other exception - something happened, exit
-        print('Reading error: '.format(str(e)))
-        sys.exit()
