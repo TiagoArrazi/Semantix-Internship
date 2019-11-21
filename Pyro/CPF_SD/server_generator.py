@@ -1,4 +1,5 @@
 import Pyro4
+import time
 
 
 class DigitGenerator:    
@@ -70,5 +71,12 @@ if __name__ == '__main__':
     with open('BASEPROJETO.txt', 'r') as f:
         raw = [each.replace('\n', '').strip() for each in f.readlines()]
 
-        [print('{}'.format(verifier.validate(DigitGenerator.generate_verification_digits(each)), each))
-         for each in raw]
+        start_total = time.time()
+
+        for each in raw:
+            start = time.time()
+            print('{} - {}'.format(verifier.validate(DigitGenerator.generate_verification_digits(each)),
+                                   time.time() - start))
+
+        print('Total time: {}'.format(time.time() - start_total))
+        print('Sequences validated: {}'.format(len(raw)))

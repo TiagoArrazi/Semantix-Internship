@@ -58,11 +58,12 @@ class Verifier:
 
 if __name__ == '__main__':
     
-    daemon = Pyro4.Daemon()
+    daemon = Pyro4.Daemon('192.168.43.118')
     ns = Pyro4.locateNS()
     uri = daemon.register(Verifier)
     ns.register('verifier', uri)
     print('Started')
+    print(uri)
 
     daemon.requestLoop()
 
