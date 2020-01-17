@@ -1,0 +1,26 @@
+FUNÇÕES
+
+__set_query -> checar query, caso vazia retorna tudo
+__capture_source_excel_docs -> captura das informações dos processos e dos números dos processos para exportação de arquivo excel
+__rebuild_alvara_link -> filtragem para reconstrução do link do alvará
+__capture_subjects -> reconstrução da resposta do endpoint baseado nos pedidos e as respostas de modelos envolvendo pedidos
+__capture_solution -> reconstrução das respostas de modelos envolvendo procedência do processo
+__remove_unecessary_aggs -> removendo agregações que não são mais necessárias
+reconstructing_chartline -> reconstrução da resposta do leaderboard
+enterprise_leaderboard -> construção de leaderboard de empresa
+capture_all_enterprises -> captura todas as empresas competidoras da agregação
+capture_enterprises_from_leaderboard -> captura de todas as empresas do leaderboard
+capture_total_by_enterprise -> captura do número total de processos de uma empresa específica através da agregação
+capture_last_12_months -> cria uma lista das datas dos últimos 12 meses
+total_per_enterprise -> construção do leaderboard de empresas
+
+
+PARÂMETROS
+
+confirmation -> nome do índice 
+sort -> lista de ordenação para o ES
+chartline -> leaderboard
+enterprise -> nome da empresa
+data -> lista de contagem de processos das empresas
+labels -> lista de nomes das empresas
+percent -> porcentagem de aumento entre o mês atual e o anterior no leaderboard

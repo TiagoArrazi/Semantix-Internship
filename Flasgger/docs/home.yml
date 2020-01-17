@@ -1,0 +1,57 @@
+Hello World 
+
+--- 
+
+tags: 
+
+     - Access Group 
+
+consumes: 
+
+     - application/json 
+
+produces: 
+
+     - application/json 
+
+parameters: 
+
+     - name: Authorization 
+
+       in: header 
+
+       type: string 
+
+       required: true 
+
+       default: Bearer <token> 
+
+responses: 
+
+     200: 
+
+          description: Retorna o model User 
+
+     400: 
+
+          description: Dados enviados inválidos 
+
+     404: 
+
+          description: User does not exists 
+
+     401: 
+
+          description: Não autorizado 
+
+     412: 
+
+          description: Dados enviados inválidos 
+
+     422: 
+
+          description: Dados enviados inválidos 
+
+     500: 
+
+          description: Erro na aplicação 
